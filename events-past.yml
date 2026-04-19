@@ -5,7 +5,9 @@
 events:
   - name: "POTA Outing"
     date: "2026-04-03"
+    location: "Lone Elm Park, Olathe, KS"
 
   - name: "Simplex Contest"
     date: "2026-03-28"
+    location: "Kansas City Metro UHF/VHF"
 
