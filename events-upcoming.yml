@@ -8,9 +8,13 @@
 # (or end_date for multi-day events) has passed.
 
 events:
+  - name: "Future test sort"
+    date: "2026-10-10"
+
   - name: "ARRL Field Day"
     date: "2026-06-27"
     end_date: "2026-06-28"
+
   - name: "Test event"
     date: "2026-08-08"
 

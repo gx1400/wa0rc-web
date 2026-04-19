@@ -82,15 +82,14 @@ def move_past_events(upcoming_path: Path, past_path: Path, today: date) -> None:
         else:
             still_upcoming.append(ev)
 
-    if not newly_past:
-        return
-
     past.extend(newly_past)
-    past.sort(key=event_sort_date, reverse=True)
+
+    # Always sort: upcoming soonest first, past most recent first
     still_upcoming.sort(key=event_start_date)
+    past.sort(key=event_sort_date, reverse=True)
 
     upcoming_header = (
-        "# Upcoming club events\n"
+        "# Upcoming club events (soonest first)\n"
         "# Format:\n"
         '#   - name: "Event Name"\n'
         '#     date: "YYYY-MM-DD"              # single-day event\n'
@@ -108,8 +107,11 @@ def move_past_events(upcoming_path: Path, past_path: Path, today: date) -> None:
     save_events(upcoming_path, still_upcoming, upcoming_header)
     save_events(past_path, past, past_header)
 
-    moved_names = [e["name"] for e in newly_past]
-    print(f"Moved {len(newly_past)} event(s) to past: {', '.join(moved_names)}")
+    if newly_past:
+        moved_names = [e["name"] for e in newly_past]
+        print(f"Moved {len(newly_past)} event(s) to past: {', '.join(moved_names)}")
+    else:
+        print("No events to move. Sorted both files.")
 
 
 def build_events_html(upcoming_path: Path, past_path: Path) -> str:
