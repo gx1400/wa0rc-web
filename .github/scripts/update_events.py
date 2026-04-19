@@ -35,6 +35,8 @@ def save_events(path: Path, events: list, header_comment: str) -> None:
                 f.write(f'    date: "{ev["date"]}"\n')
                 if ev.get("end_date"):
                     f.write(f'    end_date: "{ev["end_date"]}"\n')
+                if ev.get("url"):
+                    f.write(f'    url: "{ev["url"]}"\n')
                 f.write("\n")
 
 
@@ -94,6 +96,7 @@ def move_past_events(upcoming_path: Path, past_path: Path, today: date) -> None:
         '#   - name: "Event Name"\n'
         '#     date: "YYYY-MM-DD"              # single-day event\n'
         '#     end_date: "YYYY-MM-DD"          # optional, for multi-day events\n'
+        '#     url: "https://..."              # optional, link for more info\n'
         "#\n"
         "# Events are automatically moved to events-past.yml after their date\n"
         "# (or end_date for multi-day events) has passed.\n"
@@ -136,9 +139,13 @@ def build_events_html(upcoming_path: Path, past_path: Path) -> str:
         lines.append('        <ul class="event-list">')
         for ev in upcoming:
             date_str = format_date_display(ev)
+            if ev.get("url"):
+                name_html = f'<a href="{ev["url"]}" target="_blank" rel="noopener">{ev["name"]}</a>'
+            else:
+                name_html = ev["name"]
             lines.append(f'          <li class="event-item">')
             lines.append(f'            <span class="event-date">{date_str}</span>')
-            lines.append(f'            <span class="event-name">{ev["name"]}</span>')
+            lines.append(f'            <span class="event-name">{name_html}</span>')
             lines.append(f'          </li>')
         lines.append('        </ul>')
     else:
@@ -151,9 +158,13 @@ def build_events_html(upcoming_path: Path, past_path: Path) -> str:
         lines.append('        <ul class="event-list">')
         for ev in shown:
             date_str = format_date_display(ev)
+            if ev.get("url"):
+                name_html = f'<a href="{ev["url"]}" target="_blank" rel="noopener">{ev["name"]}</a>'
+            else:
+                name_html = ev["name"]
             lines.append(f'          <li class="event-item">')
             lines.append(f'            <span class="event-date">{date_str}</span>')
-            lines.append(f'            <span class="event-name">{ev["name"]}</span>')
+            lines.append(f'            <span class="event-name">{name_html}</span>')
             lines.append(f'          </li>')
         lines.append('        </ul>')
         if len(past) > 10:

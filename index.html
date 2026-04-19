@@ -372,6 +372,16 @@
       text-align: right;
     }
 
+    .event-name a {
+      color: var(--sky);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .event-name a:hover {
+      text-decoration: underline;
+    }
+
     .event-note {
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -470,23 +480,11 @@
         <ul class="event-list">
           <li class="event-item">
             <span class="event-date">Jun 27-28, 2026</span>
-            <span class="event-name">ARRL Field Day</span>
-          </li>
-          <li class="event-item">
-            <span class="event-date">Aug 08, 2026</span>
-            <span class="event-name">Test event</span>
-          </li>
-          <li class="event-item">
-            <span class="event-date">Oct 10, 2026</span>
-            <span class="event-name">Future test sort</span>
+            <span class="event-name"><a href="https://www.arrl.org/field-day" target="_blank" rel="noopener">ARRL Field Day</a></span>
           </li>
         </ul>
         <h3 class="events-subheading">Past</h3>
         <ul class="event-list">
-          <li class="event-item">
-            <span class="event-date">Apr 10, 2026</span>
-            <span class="event-name">Test past event in upcoming</span>
-          </li>
           <li class="event-item">
             <span class="event-date">Apr 03, 2026</span>
             <span class="event-name">POTA Outing</span>
@@ -494,14 +492,6 @@
           <li class="event-item">
             <span class="event-date">Mar 28, 2026</span>
             <span class="event-name">Simplex Contest</span>
-          </li>
-          <li class="event-item">
-            <span class="event-date">Jan 02, 2026</span>
-            <span class="event-name">Test past event</span>
-          </li>
-          <li class="event-item">
-            <span class="event-date">Jul 11, 2025</span>
-            <span class="event-name">Oldest Event</span>
           </li>
         </ul>
       </div>
