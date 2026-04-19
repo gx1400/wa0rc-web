@@ -5,6 +5,13 @@ on:
   # schedule:
   #   - cron: '0 6 * * *'
 
+  # Run on PRs that touch event files or the script
+  pull_request:
+    paths:
+      - 'events-upcoming.yml'
+      - 'events-past.yml'
+      - '.github/scripts/update_events.py'
+
   # Manual trigger
   workflow_dispatch:
 
@@ -20,11 +27,11 @@ jobs:
 
       - uses: actions/checkout@v6
         with:
-          ref: main
+          ref: ${{ github.head_ref || github.ref }}
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 

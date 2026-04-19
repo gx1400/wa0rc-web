@@ -3,6 +3,7 @@
 #   - name: "Event Name"
 #     date: "YYYY-MM-DD"              # single-day event
 #     end_date: "YYYY-MM-DD"          # optional, for multi-day events
+#     url: "https://..."              # optional, link for more info
 #
 # Events are automatically moved to events-past.yml after their date
 # (or end_date for multi-day events) has passed.
@@ -11,6 +12,7 @@ events:
   - name: "ARRL Field Day"
     date: "2026-06-27"
     end_date: "2026-06-28"
+    url: "https://www.arrl.org/field-day"
 
   - name: "Test event"
     date: "2026-08-08"
