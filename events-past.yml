@@ -1,0 +1,10 @@
+# Past club events (newest first)
+# Events are automatically moved here from events-upcoming.yml
+# after their date (or end_date) has passed.
+
+events:
+  - name: "POTA Outing"
+    date: "2026-04-03"
+
+  - name: "Simplex Contest"
+    date: "2026-03-28"
