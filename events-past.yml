@@ -6,6 +6,9 @@ events:
   - name: "POTA Outing"
     date: "2026-04-03"
 
+  - name: "Oldest Event"
+    date: "2025-07-11"
+
   - name: "Simplex Contest"
     date: "2026-03-28"
 
