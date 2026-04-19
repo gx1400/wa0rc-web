@@ -1,11 +1,4 @@
 # Past club events (newest first)
-# Format:
-#   - name: "Event Name"
-#     date: "YYYY-MM-DD"              # single-day event
-#     end_date: "YYYY-MM-DD"          # optional, for multi-day events
-#     url: "https://..."              # optional, link for more info
-#     location: "Place Name"          # optional, where the event is held
-#
 # Events are automatically moved here from events-upcoming.yml
 # after their date (or end_date) has passed.
 
