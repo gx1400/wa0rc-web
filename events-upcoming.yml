@@ -11,3 +11,6 @@ events:
   - name: "ARRL Field Day"
     date: "2026-06-27"
     end_date: "2026-06-28"
+  - name: "Test event"
+    date: "2026-08-08"
+
