@@ -1,0 +1,3 @@
+# Exclude repo files from Cloudflare Pages deployment
+README.md
+LICENSE
