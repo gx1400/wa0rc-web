@@ -1,0 +1,41 @@
+name: Update Dates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+
+jobs:
+  update-dates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update copyright year and last updated date
+        run: |
+          YEAR=$(date -u +%Y)
+          # Format: "April 18, 2026"
+          UPDATED=$(date -u +"%B %d, %Y" | sed 's/ 0/ /')
+
+          # Update copyright year: © YYYY Waypoint...
+          sed -i "s/© [0-9]\{4\} Waypoint/\&copy; ${YEAR} Waypoint/" index.html
+          # Handle the HTML entity version too
+          sed -i "s/&copy; [0-9]\{4\} Waypoint/\&copy; ${YEAR} Waypoint/" index.html
+
+          # Update lastUpdated JS variable
+          sed -i "s/const lastUpdated = \".*\"/const lastUpdated = \"${UPDATED}\"/" index.html
+
+          echo "Set copyright to ${YEAR}, lastUpdated to ${UPDATED}"
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet index.html && echo "No changes" && exit 0
+          git add index.html
+          git commit -m "chore: update copyright year and last updated date"
+          git push
