@@ -10,12 +10,64 @@ using Wrangler.
 
 ## Structure
 
+```text
+index.html                   - Club website (single-page)
+events-upcoming.yml          - Upcoming club events data
+events-past.yml              - Past club events data
+wrangler.jsonc               - Cloudflare Pages / Wrangler configuration
+.assetsignore                - Files excluded from Cloudflare Pages deployment
+.github/workflows/           - GitHub Actions CI/CD
+.github/schemas/events.json  - JSON Schema for event YAML validation
+.github/scripts/             - Automation scripts
 ```
-index.html          - Club website (single-page)
-wrangler.jsonc      - Cloudflare Pages / Wrangler configuration
-.assetsignore       - Files excluded from Cloudflare Pages deployment
-.github/workflows/  - GitHub Actions CI/CD
+
+## Updating Events
+
+Club events are managed in two YAML files: `events-upcoming.yml` and `events-past.yml`.
+
+### Event Format
+
+```yaml
+events:
+  - name: "ARRL Field Day"
+    date: "2026-06-27"              # required, YYYY-MM-DD
+    end_date: "2026-06-28"          # optional, for multi-day events
+    url: "https://www.arrl.org/field-day"  # optional, makes name a clickable link
+    location: "Olathe Prairie Center"      # optional, shown below event name
 ```
+
+### Adding or Editing Events
+
+1. Edit `events-upcoming.yml` to add or modify upcoming events.
+2. Open a pull request with your changes (see [Contributing](#contributing) below).
+3. When the PR is opened, a GitHub Actions workflow automatically:
+   - Validates the YAML against the schema (catches typos and formatting errors)
+   - Runs the update script to inject event HTML into `index.html`
+   - Commits the result back to your PR branch
+   - Triggers a Cloudflare preview deployment so you can review the live result
+
+Past events do not need to be manually moved - the workflow automatically
+migrates events from `events-upcoming.yml` to `events-past.yml` once their
+date has passed.
+
+### YAML Rules
+
+- `name` and `date` are required; all other fields are optional
+- `date` must use `YYYY-MM-DD` format
+- `url` must start with `http://` or `https://`
+- No extra/misspelled fields are allowed - the schema validator will catch them
+
+## Contributing
+
+To submit changes (events, content fixes, etc.):
+
+1. [Fork this repository](https://github.com/gx1400/wa0rc-web/fork) on GitHub.
+2. Create a new branch on your fork for your changes.
+3. Make your edits (e.g., update `events-upcoming.yml`).
+4. Open a Pull Request from your branch back to `main` in this repo.
+5. A Cloudflare preview deployment will be generated automatically - the URL
+   will appear in the PR checks once the workflow completes.
+6. A maintainer will review and merge your PR.
 
 ## Local Development
 
@@ -27,8 +79,8 @@ npx wrangler pages dev .
 
 ## Deployment
 
-Pushes to `main` trigger a GitHub Actions workflow that deploys to Cloudflare
-Pages via Wrangler.
+Merges to `main` automatically deploy to Cloudflare Pages. A separate workflow
+also updates the `lastUpdated` date in `index.html` on each merge.
 
 ## License
 
