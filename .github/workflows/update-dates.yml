@@ -32,11 +32,20 @@ jobs:
 
           echo "Set copyright to ${YEAR}, lastUpdated to ${UPDATED}"
 
-      - name: Commit if changed
+      - name: Create PR if changed
         run: |
+          git diff --quiet index.html && echo "No changes" && exit 0
+          BRANCH="chore/update-dates-$(date -u +%Y%m%d)"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet index.html && echo "No changes" && exit 0
+          git checkout -b "$BRANCH"
           git add index.html
           git commit -m "chore: update copyright year and last updated date"
-          git push
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "chore: update copyright year and last updated date" \
+            --body "Automated date update by GitHub Actions." \
+            --base main \
+            --head "$BRANCH"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
