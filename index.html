@@ -359,17 +359,24 @@
       background: var(--bg);
       border-radius: 8px;
       font-size: 0.92rem;
+      gap: 1rem;
     }
 
     .event-date {
       font-weight: 600;
       color: var(--navy);
       white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .event-detail {
+      text-align: right;
+      min-width: 0;
     }
 
     .event-name {
       color: var(--text-muted);
-      text-align: right;
+      display: block;
     }
 
     .event-name a {
@@ -380,6 +387,13 @@
 
     .event-name a:hover {
       text-decoration: underline;
+    }
+
+    .event-location {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      opacity: 0.7;
     }
 
     .event-note {
@@ -480,18 +494,18 @@
         <ul class="event-list">
           <li class="event-item">
             <span class="event-date">Jun 27-28, 2026</span>
-            <span class="event-name"><a href="https://www.arrl.org/field-day" target="_blank" rel="noopener">ARRL Field Day</a></span>
+            <span class="event-detail"><span class="event-name"><a href="https://www.arrl.org/field-day" target="_blank" rel="noopener">ARRL Field Day</a></span><span class="event-location">Olathe Prairie Center</span></span>
           </li>
         </ul>
         <h3 class="events-subheading">Past</h3>
         <ul class="event-list">
           <li class="event-item">
             <span class="event-date">Apr 03, 2026</span>
-            <span class="event-name">POTA Outing</span>
+            <span class="event-detail"><span class="event-name">POTA Outing</span></span>
           </li>
           <li class="event-item">
             <span class="event-date">Mar 28, 2026</span>
-            <span class="event-name">Simplex Contest</span>
+            <span class="event-detail"><span class="event-name">Simplex Contest</span></span>
           </li>
         </ul>
       </div>
