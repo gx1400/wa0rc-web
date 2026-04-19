@@ -3,6 +3,9 @@
 # after their date (or end_date) has passed.
 
 events:
+  - name: "Test past event in upcoming"
+    date: "2026-04-10"
+
   - name: "POTA Outing"
     date: "2026-04-03"
 
