@@ -1,44 +1,33 @@
 name: Update Dates
-
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - 'index.html'
-
 jobs:
   update-dates:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - uses: actions/checkout@v6
         with:
           ref: main
           token: ${{ steps.app-token.outputs.token }}
-
       - name: Update copyright year and last updated date
         run: |
           YEAR=$(date -u +%Y)
           # Format: "April 18, 2026"
           UPDATED=$(date -u +"%B %d, %Y" | sed 's/ 0/ /')
-
-          # Update copyright year: © YYYY Waypoint...
-          sed -i "s/© [0-9]\{4\} Waypoint/\&copy; ${YEAR} Waypoint/" index.html
-          # Handle the HTML entity version too
-          sed -i "s/&copy; [0-9]\{4\} Waypoint/\&copy; ${YEAR} Waypoint/" index.html
-
+          # Update copyrightYear JS variable
+          sed -i "s/const copyrightYear = \".*\"/const copyrightYear = \"${YEAR}\"/" index.html
           # Update lastUpdated JS variable
           sed -i "s/const lastUpdated = \".*\"/const lastUpdated = \"${UPDATED}\"/" index.html
-
-          echo "Set copyright to ${YEAR}, lastUpdated to ${UPDATED}"
-
+          echo "Set copyrightYear to ${YEAR}, lastUpdated to ${UPDATED}"
       - name: Commit and push if changed
         run: |
           git diff --quiet index.html && echo "No changes" && exit 0

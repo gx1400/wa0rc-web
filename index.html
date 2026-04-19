@@ -1,120 +1,476 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Waypoint Amateur Radio Club - WA0RC</title>
-  <!-- Set the last updated date here -->
+  <meta name="description" content="Waypoint Amateur Radio Club (WA0RC) in Olathe, Kansas. Amateur radio community, VE testing, and licensing support.">
+  <meta property="og:title" content="Waypoint Amateur Radio Club - WA0RC">
+  <meta property="og:description" content="Amateur radio club in Olathe, Kansas. Join us for VE testing and community events.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
   <script>
-    const lastUpdated = "April 19, 2026";
+    const lastUpdated = "April 18, 2026";
+    const copyrightYear = "2026";
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    
+    :root {
+      --navy: #0f2440;
+      --navy-mid: #1a3558;
+      --navy-light: #254a72;
+      --sky: #4a9eed;
+      --sky-light: #7bbaf5;
+      --amber: #f0a830;
+      --amber-light: #f5c462;
+      --red: #d93025;
+      --bg: #f0f4f8;
+      --card-bg: #ffffff;
+      --text: #1a2a3a;
+      --text-muted: #5a6a7a;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(15,36,64,0.08), 0 4px 16px rgba(15,36,64,0.06);
+      --shadow-hover: 0 2px 6px rgba(15,36,64,0.1), 0 8px 24px rgba(15,36,64,0.1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f9f9f9;
-      color: #222;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
+
+    /* ---- HEADER ---- */
     header {
-      background: #002868;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy-light) 100%);
       color: white;
+      padding: 3rem 1.5rem 2.5rem;
       text-align: center;
-      padding: 2rem 1rem;
+      position: relative;
+      overflow: hidden;
     }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(74,158,237,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(240,168,48,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .callsign-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 10px;
+      padding: 0.5rem 1.4rem;
+      margin-bottom: 1.25rem;
+      backdrop-filter: blur(4px);
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+      color: white;
+      font-feature-settings: 'zero' 1;
+    }
+
     header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      margin: 0 0 0.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .header-location {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.7);
       margin: 0;
-      font-size: 2.5rem;
+      font-weight: 300;
     }
-    header p {
-      font-size: 1.2rem;
-      margin-top: 0.5rem;
+
+    /* ---- SIGNAL STRIPE ---- */
+    .signal-stripe {
+      height: 4px;
+      background: linear-gradient(90deg, var(--amber) 0%, var(--sky) 50%, var(--amber) 100%);
     }
+
+    /* ---- MAIN ---- */
     main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: white;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    /* ---- CARDS ---- */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (min-width: 640px) {
+      .card-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .card-grid .card-full {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.75rem;
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .card-label {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin: 0 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-label svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .card h2 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      margin: 0 0 1rem;
+      color: var(--navy);
+      letter-spacing: -0.01em;
+    }
+
+    .card p {
+      margin: 0 0 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ---- OFFICER LIST ---- */
+    .officer-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .officer-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0.85rem;
+      background: var(--bg);
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 0.92rem;
     }
-    section {
-      margin-bottom: 2rem;
+
+    .officer-role {
+      font-weight: 600;
+      color: var(--navy);
     }
-    h2 {
-      color: #002868;
-      border-bottom: 2px solid #bf0a30;
-      padding-bottom: 0.5rem;
+
+    .officer-info {
+      text-align: right;
+      color: var(--text-muted);
     }
-    footer {
-      background: #002868;
-      color: white;
-      text-align: center;
-      padding: 1rem;
+
+    .officer-call {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: var(--sky);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ---- VE SECTION ---- */
+    .vec-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .vec-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--bg);
+      border-radius: 6px;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .vec-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .ve-leads {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ve-lead-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.85rem;
+      background: var(--bg);
+      border-radius: 8px;
       font-size: 0.9rem;
     }
-    a {
-      color: #bf0a30;
+
+    .ve-lead-vec {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .ve-lead-name {
+      color: var(--text-muted);
+    }
+
+    .ve-lead-call {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: var(--sky);
+      font-size: 0.85rem;
+    }
+
+    /* ---- CONTACT ---- */
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15,36,64,0.25);
       text-decoration: none;
     }
-    a:hover {
-      text-decoration: underline;
+
+    .contact-link svg {
+      width: 18px;
+      height: 18px;
     }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
+
+    /* ---- FOOTER ---- */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.85rem;
     }
-    li {
-      margin: 0.3rem 0;
+
+    footer strong {
+      color: rgba(255,255,255,0.85);
     }
-    .small-note {
-      font-size: 0.8rem;
-      color: #ddd;
-      margin-top: 0.5rem;
+
+    .footer-updated {
+      font-size: 0.75rem;
+      margin-top: 0.4rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ---- ANIMATIONS ---- */
+    @media (prefers-reduced-motion: no-preference) {
+      .card {
+        animation: cardIn 0.5s ease both;
+      }
+      .card:nth-child(1) { animation-delay: 0.05s; }
+      .card:nth-child(2) { animation-delay: 0.12s; }
+      .card:nth-child(3) { animation-delay: 0.19s; }
+      .card:nth-child(4) { animation-delay: 0.26s; }
+      .card:nth-child(5) { animation-delay: 0.33s; }
+
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     }
   </style>
-
-
 </head>
 <body>
+
   <header>
-    <h1>Waypoint Amateur Radio Club</h1>
-    <p>Olathe, Kansas &mdash; Callsign: <strong>WA0RC</strong></p>
+    <div class="header-content">
+      <div class="callsign-badge">WA0RC</div>
+      <h1>Waypoint Amateur Radio Club</h1>
+      <p class="header-location">Olathe, Kansas</p>
+    </div>
   </header>
+  <div class="signal-stripe"></div>
+
   <main>
-    <section>
-      <h2>Club Officers</h2>
-      <ul>
+    <div class="card-grid">
 
-        <li><strong>President:</strong> Tony Milluzzi &mdash; KD8RTT</li>
-        <li><strong>Vice President:</strong> Matt Robertson &mdash; KD0WGZ</li>
-        <li><strong>Treasurer:</strong> Derek Rowland &mdash; NZ0P</li>
-        <li><strong>Secretary:</strong> Paul Vittorino &mdash; KB0MVQ</li>
-        <li><strong>Trustee:</strong> Joe Robinson &mdash; KD0JWD</li>
-      </ul>
-    </section>
+      <!-- About -->
+      <div class="card card-full">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          About Us
+        </div>
+        <h2>Who We Are</h2>
+        <p>The Waypoint Amateur Radio Club is a community of amateur radio operators in Olathe and south Johnson County dedicated to growing the hobby. We support our members through hands-on learning, shared resources, and a welcoming space for operators of all experience levels to connect and get on the air.</p>
+      </div>
 
-    <section>
-      <h2>VE Testing</h2>
-      <p>The Waypoint Amateur Radio Club hosts Volunteer Examiner (VE) testing sessions for new and upgrading amateur radio operators. Our VE team is accredited with both the <strong>Laurel VEC</strong> and the <strong>Central Alabama VEC (CAVEC)</strong>.</p>
-      <ul>
-        <li><strong>Laurel VEC Team Lead:</strong> Derek Rowland &mdash; NZ0P</li>
-        <li><strong>CAVEC Team Lead:</strong> Matt Robertson &mdash; KD0WGZ</li>
-      </ul>
-    </section>
+      <!-- Officers -->
+      <div class="card card-full">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Club Officers
+        </div>
+        <h2>Leadership</h2>
+        <ul class="officer-list">
+          <li class="officer-item">
+            <span class="officer-role">President</span>
+            <span class="officer-info">Tony Milluzzi <span class="officer-call">KD8RTT</span></span>
+          </li>
+          <li class="officer-item">
+            <span class="officer-role">Vice President</span>
+            <span class="officer-info">Matt Robertson <span class="officer-call">KD0WGZ</span></span>
+          </li>
+          <li class="officer-item">
+            <span class="officer-role">Treasurer</span>
+            <span class="officer-info">Derek Rowland <span class="officer-call">NZ0P</span></span>
+          </li>
+          <li class="officer-item">
+            <span class="officer-role">Secretary</span>
+            <span class="officer-info">Paul Vittorino <span class="officer-call">KB0MVQ</span></span>
+          </li>
+          <li class="officer-item">
+            <span class="officer-role">Trustee</span>
+            <span class="officer-info">Joe Robinson <span class="officer-call">KD0JWD</span></span>
+          </li>
+        </ul>
+      </div>
 
-    <section>
-      <h2>Contact Us</h2>
-      <p>For information about membership, events, or licensing, reach out to us at <a href="mailto:admin@wa0rc.org">admin@wa0rc.org</a>.</p>
-    </section>
+      <!-- VE Testing -->
+      <div class="card">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Licensing
+        </div>
+        <h2>VE Testing</h2>
+        <p>We host Volunteer Examiner sessions for new and upgrading amateur radio operators.</p>
+        <div class="vec-badges">
+          <span class="vec-badge"><span class="dot"></span>Laurel VEC</span>
+          <span class="vec-badge"><span class="dot"></span>CAVEC</span>
+        </div>
+        <ul class="ve-leads">
+          <li class="ve-lead-item">
+            <span><span class="ve-lead-vec">Laurel VEC</span> <span class="ve-lead-name">- Derek Rowland</span></span>
+            <span class="ve-lead-call">NZ0P</span>
+          </li>
+          <li class="ve-lead-item">
+            <span><span class="ve-lead-vec">CAVEC</span> <span class="ve-lead-name">- Matt Robertson</span></span>
+            <span class="ve-lead-call">KD0WGZ</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- QSO Contacts -->
+      <div class="card">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2"/><path d="M12 20v2"/></svg>
+          On the Air
+        </div>
+        <h2>QSO Contacts</h2>
+        <p>Worked WA0RC? Send your QSO details for confirmation.</p>
+        <a href="mailto:qso@wa0rc.org" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          qso@wa0rc.org
+        </a>
+      </div>
+
+      <!-- Contact -->
+      <div class="card">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Get in Touch
+        </div>
+        <h2>Contact Us</h2>
+        <p>Questions about membership, events, or licensing? We'd love to hear from you.</p>
+        <a href="mailto:contact@wa0rc.org" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          contact@wa0rc.org
+        </a>
+      </div>
+
+    </div>
   </main>
 
   <footer>
-    <p>&copy; 2026 Waypoint Amateur Radio Club (WA0RC) - Olathe, Kansas</p>
-    <p class="small-note">Last updated: <span id="lastUpdated"></span></p>
+    <p>&copy; <span id="copyrightYear"></span> <strong>Waypoint Amateur Radio Club</strong> (<span style="font-family: 'Fira Code', monospace; font-feature-settings: 'zero' 1;">WA0RC</span>) - Olathe, Kansas</p>
+    <p class="footer-updated">Last updated: <span id="lastUpdated"></span></p>
   </footer>
 
   <script>
     document.getElementById("lastUpdated").textContent = lastUpdated;
+    document.getElementById("copyrightYear").textContent = copyrightYear;
   </script>
 </body>
 </html>
