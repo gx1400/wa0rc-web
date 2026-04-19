@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+"""
+Process club events YAML files:
+  1. Move past events from events-upcoming.yml to events-past.yml
+  2. Inject an events card into index.html between marker comments
+"""
+
+import yaml
+import sys
+from datetime import date, datetime
+from pathlib import Path
+
+
+def load_events(path: Path) -> list:
+    """Load events list from a YAML file."""
+    if not path.exists():
+        return []
+    with open(path, "r") as f:
+        data = yaml.safe_load(f)
+    if data is None or "events" not in data or data["events"] is None:
+        return []
+    return data["events"]
+
+
+def save_events(path: Path, events: list, header_comment: str) -> None:
+    """Save events list to a YAML file with a header comment."""
+    with open(path, "w") as f:
+        f.write(header_comment)
+        if not events:
+            f.write("\nevents: []\n")
+        else:
+            f.write("\nevents:\n")
+            for ev in events:
+                f.write(f'  - name: "{ev["name"]}"\n')
+                f.write(f'    date: "{ev["date"]}"\n')
+                if ev.get("end_date"):
+                    f.write(f'    end_date: "{ev["end_date"]}"\n')
+                f.write("\n")
+
+
+def event_sort_date(ev: dict) -> date:
+    """Return the effective date for sorting (end_date if present, else date)."""
+    d = ev.get("end_date", ev["date"])
+    if isinstance(d, date) and not isinstance(d, datetime):
+        return d
+    return datetime.strptime(str(d), "%Y-%m-%d").date()
+
+
+def event_start_date(ev: dict) -> date:
+    """Return the start date of the event."""
+    d = ev["date"]
+    if isinstance(d, date) and not isinstance(d, datetime):
+        return d
+    return datetime.strptime(str(d), "%Y-%m-%d").date()
+
+
+def format_date_display(ev: dict) -> str:
+    """Format event date(s) for display."""
+    start = event_start_date(ev)
+    start_str = start.strftime("%b %d, %Y")
+    if ev.get("end_date"):
+        end = event_sort_date(ev)
+        if start.month == end.month and start.year == end.year:
+            return f"{start.strftime('%b')} {start.day}-{end.day}, {start.year}"
+        else:
+            return f"{start_str} - {end.strftime('%b %d, %Y')}"
+    return start_str
+
+
+def move_past_events(upcoming_path: Path, past_path: Path, today: date) -> None:
+    """Move events whose end date has passed from upcoming to past."""
+    upcoming = load_events(upcoming_path)
+    past = load_events(past_path)
+
+    still_upcoming = []
+    newly_past = []
+
+    for ev in upcoming:
+        effective_end = event_sort_date(ev)
+        if effective_end < today:
+            newly_past.append(ev)
+        else:
+            still_upcoming.append(ev)
+
+    if not newly_past:
+        return
+
+    past.extend(newly_past)
+    past.sort(key=event_sort_date, reverse=True)
+    still_upcoming.sort(key=event_start_date)
+
+    upcoming_header = (
+        "# Upcoming club events\n"
+        "# Format:\n"
+        '#   - name: "Event Name"\n'
+        '#     date: "YYYY-MM-DD"              # single-day event\n'
+        '#     end_date: "YYYY-MM-DD"          # optional, for multi-day events\n'
+        "#\n"
+        "# Events are automatically moved to events-past.yml after their date\n"
+        "# (or end_date for multi-day events) has passed.\n"
+    )
+    past_header = (
+        "# Past club events (newest first)\n"
+        "# Events are automatically moved here from events-upcoming.yml\n"
+        "# after their date (or end_date) has passed.\n"
+    )
+
+    save_events(upcoming_path, still_upcoming, upcoming_header)
+    save_events(past_path, past, past_header)
+
+    moved_names = [e["name"] for e in newly_past]
+    print(f"Moved {len(newly_past)} event(s) to past: {', '.join(moved_names)}")
+
+
+def build_events_html(upcoming_path: Path, past_path: Path) -> str:
+    """Build the HTML for the events card matching the card-grid design."""
+    upcoming = load_events(upcoming_path)
+    past = load_events(past_path)
+
+    upcoming.sort(key=event_start_date)
+    past.sort(key=event_sort_date, reverse=True)
+
+    lines = []
+    lines.append('      <div class="card card-full">')
+    lines.append('        <div class="card-label">')
+    lines.append('          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>')
+    lines.append('          Events')
+    lines.append('        </div>')
+    lines.append('        <h2>Club Events</h2>')
+
+    # Upcoming events
+    lines.append('        <h3 class="events-subheading">Upcoming</h3>')
+    if upcoming:
+        lines.append('        <ul class="event-list">')
+        for ev in upcoming:
+            date_str = format_date_display(ev)
+            lines.append(f'          <li class="event-item">')
+            lines.append(f'            <span class="event-date">{date_str}</span>')
+            lines.append(f'            <span class="event-name">{ev["name"]}</span>')
+            lines.append(f'          </li>')
+        lines.append('        </ul>')
+    else:
+        lines.append('        <p class="event-note">No upcoming events scheduled.</p>')
+
+    # Past events (show last 10)
+    if past:
+        shown = past[:10]
+        lines.append('        <h3 class="events-subheading">Past</h3>')
+        lines.append('        <ul class="event-list">')
+        for ev in shown:
+            date_str = format_date_display(ev)
+            lines.append(f'          <li class="event-item">')
+            lines.append(f'            <span class="event-date">{date_str}</span>')
+            lines.append(f'            <span class="event-name">{ev["name"]}</span>')
+            lines.append(f'          </li>')
+        lines.append('        </ul>')
+        if len(past) > 10:
+            lines.append(
+                f'        <p class="event-note">...and {len(past) - 10} more past events</p>'
+            )
+
+    lines.append('      </div>')
+    return "\n".join(lines)
+
+
+def inject_events_into_html(html_path: Path, events_html: str) -> None:
+    """Replace content between event marker comments in index.html."""
+    start_marker = "<!-- EVENTS-START -->"
+    end_marker = "<!-- EVENTS-END -->"
+
+    content = html_path.read_text()
+
+    start_idx = content.find(start_marker)
+    end_idx = content.find(end_marker)
+
+    if start_idx == -1 or end_idx == -1:
+        print(f"ERROR: Could not find event markers in {html_path}")
+        print(f"  Expected '{start_marker}' and '{end_marker}' in the HTML.")
+        sys.exit(1)
+
+    new_content = (
+        content[: start_idx + len(start_marker)]
+        + "\n"
+        + events_html
+        + "\n      "
+        + content[end_idx:]
+    )
+
+    html_path.write_text(new_content)
+    print(f"Updated {html_path} with events card.")
+
+
+def main():
+    repo_root = Path(".")
+
+    upcoming_path = repo_root / "events-upcoming.yml"
+    past_path = repo_root / "events-past.yml"
+    html_path = repo_root / "index.html"
+
+    today = date.today()
+    print(f"Processing events as of {today}")
+
+    # Step 1: Move past events
+    move_past_events(upcoming_path, past_path, today)
+
+    # Step 2: Build and inject HTML
+    events_html = build_events_html(upcoming_path, past_path)
+    inject_events_into_html(html_path, events_html)
+
+
+if __name__ == "__main__":
+    main()
