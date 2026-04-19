@@ -1,9 +1,9 @@
 name: Update Events and Deploy
 
 on:
-  # Uncomment the schedule below to run automatically at 2:00 AM UTC daily
-  schedule:
-    - cron: '0 2 * * *'
+  # Uncomment the schedule below to run automatically at 6:00 AM UTC daily
+  # schedule:
+  #   - cron: '0 6 * * *'
 
   # Run on PRs that touch event files or the script
   pull_request:
@@ -36,7 +36,12 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install pyyaml check-jsonschema
+
+      - name: Validate event YAML files
+        run: |
+          check-jsonschema --schemafile .github/schemas/events.json events-upcoming.yml
+          check-jsonschema --schemafile .github/schemas/events.json events-past.yml
 
       - name: Run events update script
         run: python .github/scripts/update_events.py
