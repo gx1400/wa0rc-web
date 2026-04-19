@@ -13,10 +13,3 @@ events:
     date: "2026-06-27"
     end_date: "2026-06-28"
     url: "https://www.arrl.org/field-day"
-
-  - name: "Test event"
-    date: "2026-08-08"
-
-  - name: "Future test sort"
-    date: "2026-10-10"
-
