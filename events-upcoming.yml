@@ -4,6 +4,7 @@
 #     date: "YYYY-MM-DD"              # single-day event
 #     end_date: "YYYY-MM-DD"          # optional, for multi-day events
 #     url: "https://..."              # optional, link for more info
+#     location: "Place Name"          # optional, where the event is held
 #
 # Events are automatically moved to events-past.yml after their date
 # (or end_date for multi-day events) has passed.
@@ -13,4 +14,5 @@ events:
     date: "2026-06-27"
     end_date: "2026-06-28"
     url: "https://www.arrl.org/field-day"
+    location: "TBD, proposed Garmin Parking Garage"
 
