@@ -1,4 +1,11 @@
 # Past club events (newest first)
+# Format:
+#   - name: "Event Name"
+#     date: "YYYY-MM-DD"              # single-day event
+#     end_date: "YYYY-MM-DD"          # optional, for multi-day events
+#     url: "https://..."              # optional, link for more info
+#     location: "Place Name"          # optional, where the event is held
+#
 # Events are automatically moved here from events-upcoming.yml
 # after their date (or end_date) has passed.
 
@@ -11,3 +18,12 @@ events:
     date: "2026-03-28"
     location: "Kansas City Metro UHF/VHF"
 
+  - name: "VE Testing Session"
+    date: "2026-04-01"
+    location: "Garmin, Olathe, KS"
+
+  - name: "Winter Field Day"
+    date: "2026-01-24"
+    end_date: "2026-01-25"
+    url: "https://winterfieldday.org/"
+    location: "Club Shack, Olathe, KS"
