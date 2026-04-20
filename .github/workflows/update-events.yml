@@ -2,8 +2,8 @@ name: Update Events and Deploy
 
 on:
   # Uncomment the schedule below to run automatically at 6:00 AM UTC daily
-  # schedule:
-  #   - cron: '0 6 * * *'
+  schedule:
+    - cron: '0 2 * * *'
 
   # Run on PRs that touch event files or the script
   pull_request:
