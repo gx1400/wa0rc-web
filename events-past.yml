@@ -3,9 +3,6 @@
 # after their date (or end_date) has passed.
 
 events:
-  - name: "Test Scheduled Github Action on 4/21"
-    date: "2026-04-20"
-
   - name: "POTA Outing"
     date: "2026-04-03"
     location: "Lone Elm Park, Olathe, KS"
